@@ -77,8 +77,20 @@ cd coney
 
 ### Build and test
 
-On Windows, run the commands from a shell that has the MSVC environment loaded: the **x64 Native Tools Command Prompt
-for VS 2022** from the Start menu, or any `cmd` shell after running `vcvars64.bat`. Then, on every platform:
+**On Windows**, the compiler, CMake and Ninja are only on the `PATH` in a shell that has the MSVC environment loaded.
+Open a command prompt that has it in one of two ways:
+
+- Start menu: search for **x64 Native Tools Command Prompt for VS 2022** and open it. If Windows answers "Missing
+  Shortcut: Windows is searching for %comspec%", use the second way.
+- From any command prompt, run the `vcvars64.bat` script that Visual Studio installed. It is in the `VC\Auxiliary\Build`
+  folder of your Visual Studio folder. For the Build Tools it is:
+
+    ```bat
+    "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+    ```
+
+The environment lasts only for that window, so repeat this in every new prompt. Then, on every platform, from the
+folder you cloned into:
 
 ```sh
 cmake --preset dev
