@@ -39,6 +39,69 @@ and video](docs/roadmap.md#sound-and-video), [Xbox assets (optional)](docs/roadm
 Per subsystem, the research coverage, the middleware and how it is all measured: [Progress](docs/progress/index.md).
 <!-- progress:end -->
 
+## Building and running
+
+Coney is built from source. These steps give you a development build, the one to use while the project is in
+progress; they do not make a release package. The build needs no game files, so you can build and test Coney before
+you own or have found a disc.
+
+### Requirements
+
+| | Windows | Linux | macOS |
+| --- | --- | --- | --- |
+| Compiler | MSVC 19.38+ (Visual Studio 2022 17.8 or Build Tools 2022, **Desktop development with C++**) | GCC 13+ or Clang 19+ | Xcode 16+ |
+| CMake 3.28+ and Ninja | bundled with Visual Studio | distribution packages | `brew install cmake ninja` |
+| Git | yes | yes | yes |
+
+- Network access on the first build: CMake downloads the dependencies (SDL3, librw, Dear ImGui, Catch2 and FFmpeg) at
+  the versions pinned in `cmake/deps.cmake`. You install none of them yourself.
+- OpenGL 3.3 or newer, to open a window. A headless run needs neither a display nor a GPU.
+- On Linux, the packages SDL3 and librw build against; on Ubuntu 24.04:
+
+    ```sh
+    sudo apt-get install cmake ninja-build g++-13 \
+      libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
+      libwayland-dev libxkbcommon-dev libegl1-mesa-dev libgl1-mesa-dev libdbus-1-dev libudev-dev \
+      libasound2-dev libpulse-dev libpipewire-0.3-dev
+    ```
+
+    For Clang 19 install `clang-19 clang-tools-19` instead of `g++-13`, and run
+    `export CC=clang-19 CXX=clang++-19` before the first build.
+
+### Clone
+
+```sh
+git clone https://github.com/Ryubara/coney.git
+cd coney
+```
+
+### Build and test
+
+On Windows, run the commands from a shell that has the MSVC environment loaded: the **x64 Native Tools Command Prompt
+for VS 2022** from the Start menu, or any `cmd` shell after running `vcvars64.bat`. Then, on every platform:
+
+```sh
+cmake --preset dev
+cmake --build --preset dev
+ctest --preset dev
+```
+
+The first line configures the build and downloads the dependencies, which takes a few minutes; the second compiles
+Coney into `build/dev/`; the third runs the tests, none of which needs the game.
+
+### Run
+
+The executable is `build/dev/src/platform/coney` (`coney.exe` on Windows). Without arguments it opens a window and runs
+until you close it or press Escape. To run with your own copy of the game, give it the disc: a mounted disc, a folder
+holding `WARRIORS.DIR` and `WARRIORS.WAD`, or an ISO image.
+
+```sh
+build/dev/src/platform/coney --disc /path/to/warriors.iso
+```
+
+`coney --help` lists every option. [Building and testing](docs/guides/building.md) covers the other presets
+(`release`, `ci`, `asan`), switching compilers, the Python tools and everything the run options do.
+
 ## Documentation
 
 The documentation is published at **<https://ryubara.github.io/coney/>**, rebuilt from `main` on every push. It
